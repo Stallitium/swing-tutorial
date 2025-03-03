@@ -8,9 +8,9 @@ import java.util.List;
 
 public class App extends JFrame{
     private JPanel panel;
-    private JLabel name,id,type,tuika,log;
-    private JButton s1,s2,s3,s4,s5,next,back,add,reload;
-    private JTextField namef,idf,typef;
+    private JLabel name,id,type,tuika,log,nowpage;
+    private JButton s1,s2,s3,s4,s5,next,back,add,reload,goPage;
+    private JTextField namef,idf,typef,pageNumber;
 
     List<People> p = new ArrayList<>();
     int page = 0;
@@ -203,6 +203,46 @@ public class App extends JFrame{
         });
         panel.add(reload);
 
+        next = new JButton("次のページ");
+        back = new JButton("前のページ");
+        next.setLocation(400,0);
+        back.setLocation(300,0);
+        next.setSize(100,100);
+        back.setSize(100,100);
+        next.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                load(page++);
+            }
+        });
+        back.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                load(page--);
+            }
+        });
+        panel.add(next);
+        panel.add(back);
+
+        pageNumber = new JTextField(page);
+        goPage = new JButton("Go");
+        nowpage = new JLabel();
+        pageNumber.setLocation(300,100);
+        goPage.setLocation(300,120);
+        nowpage.setLocation(400,100);
+        pageNumber.setSize(100,20);
+        goPage.setSize(100,40);
+        nowpage.setSize(100,20);
+        goPage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                load(Integer.parseInt(pageNumber.getText()));
+            }
+        });
+        panel.add(pageNumber);
+        panel.add(goPage);
+        panel.add(nowpage);
+
         this.add(panel);
         this.setSize(800,600);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -210,6 +250,9 @@ public class App extends JFrame{
     }
 
     void load(int page) {
+        if (page < 0) {
+            return;
+        }
         List<String> data = db.read(page);
         p = new ArrayList<>();
         for (String s : data) {
@@ -240,6 +283,8 @@ public class App extends JFrame{
         } catch (IndexOutOfBoundsException e) {
             s5.setText("");
         }
+        nowpage.setText(String.valueOf(page));
+        pageNumber.setText(String.valueOf(page));
     }
 
     public static void main( String[] args ) {
