@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class App extends JFrame{
     private JPanel panel;
@@ -163,10 +164,10 @@ public class App extends JFrame{
                 if (!namef.getText().equals("") && !idf.getText().equals("") && !typef.getText().equals("")) {
                     if (db.write(namef.getText(),idf.getText(),typef.getText())) {
                         log.setText("更新完了");
-                        load(page);
+                        load(0);
                     } else {
                         log.setText("追加完了");
-                        load(page);
+                        load(0);
                     }
                 } else {
                     log.setText("空欄があります");
@@ -212,13 +213,13 @@ public class App extends JFrame{
         next.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                load(page++);
+                load(++page);
             }
         });
         back.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                load(page--);
+                load(--page);
             }
         });
         panel.add(next);
@@ -251,6 +252,9 @@ public class App extends JFrame{
 
     void load(int page) {
         if (page < 0) {
+            if (this.page < 0) {
+                this.page = 0;
+            }
             return;
         }
         List<String> data = db.read(page);
