@@ -1,16 +1,17 @@
 package stallitium;
 
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+
 
 public class App extends JFrame{
     private JPanel panel;
     private JLabel name,id,type,tuika,log,nowpage;
-    private JButton s1,s2,s3,s4,s5,next,back,add,reload,goPage;
+    private JButton s1,s2,s3,s4,s5,next,back,add,reload,goPage,logClear;
     private JTextField namef,idf,typef,pageNumber;
 
     List<People> p = new ArrayList<>();
@@ -41,7 +42,6 @@ public class App extends JFrame{
                     id.setText("");
                     type.setText("");
                 }
-
             }
         });
         try {
@@ -61,7 +61,6 @@ public class App extends JFrame{
                     id.setText("");
                     type.setText("");
                 }
-
             }
         });
         try {
@@ -81,7 +80,6 @@ public class App extends JFrame{
                     id.setText("");
                     type.setText("");
                 }
-
             }
         });
         try {
@@ -101,7 +99,6 @@ public class App extends JFrame{
                     id.setText("");
                     type.setText("");
                 }
-
             }
         });
         try {
@@ -121,7 +118,6 @@ public class App extends JFrame{
                     id.setText("");
                     type.setText("");
                 }
-
             }
         });
         s1.setSize(100,100);
@@ -165,9 +161,11 @@ public class App extends JFrame{
                     if (db.write(namef.getText(),idf.getText(),typef.getText())) {
                         log.setText("更新完了");
                         load(0);
+                        page = 0;
                     } else {
                         log.setText("追加完了");
                         load(0);
+                        page = 0;
                     }
                 } else {
                     log.setText("空欄があります");
@@ -213,7 +211,12 @@ public class App extends JFrame{
         next.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                load(++page);
+                if (p.size() == 5) {
+                    load(++page);
+                } else {
+                    log.setText("その先値なし");
+                }
+
             }
         });
         back.addActionListener(new ActionListener() {
@@ -243,6 +246,17 @@ public class App extends JFrame{
         panel.add(pageNumber);
         panel.add(goPage);
         panel.add(nowpage);
+
+        logClear = new JButton("ログクリア");
+        logClear.setLocation(200,180);
+        logClear.setSize(100,40);
+        logClear.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                log.setText("");
+            }
+        });
+        panel.add(logClear);
 
         this.add(panel);
         this.setSize(800,600);
